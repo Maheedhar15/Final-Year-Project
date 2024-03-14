@@ -7,13 +7,18 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import { FaUserCircle, FaKey } from 'react-icons/fa';
 import IconButton from '@mui/material/IconButton';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const navigate = useNavigate();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleSubmit = () => {
+    navigate('/');
   };
 
   return (
@@ -106,7 +111,7 @@ const Login = () => {
       </div>
 
       <div className="mt-[40px] ml-[650px]">
-        <Button variant="outlined" color="success">
+        <Button variant="outlined" color="success" onClick={handleSubmit}>
           {' '}
           Submit{' '}
         </Button>

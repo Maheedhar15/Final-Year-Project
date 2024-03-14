@@ -5,7 +5,7 @@
 
 @layer components {
   .input-text {
-    @apply font-poppins mt-[10px] font-semibold text-[20px] text-[#7EFF66] leading-[150%] w-[284px] h-[24px] justify-start;
+    @apply font-poppins mt-[10px] font-semibold text-[20px] text-[#7EFF66] leading-[150%] w-[284px] h-[18px] justify-start;
   }
   .box-text {
     @apply p-[13px] items-center w-[383px] bg-[#F9FAFA] text-[#000];
@@ -51,7 +51,7 @@ h1 {
 }
 
 .main {
-  background-image: url('../src/assets/small_b3.jpg');
+  background: black;
   top: 0;
   min-height: 100vh;
   overflow-y: hidden;

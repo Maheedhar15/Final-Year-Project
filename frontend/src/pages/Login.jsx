@@ -20,6 +20,13 @@ const Login = () => {
   const handleForgot = () => {
     navigate('/forgotpass');
   };
+  const handleRegister = () => {
+    navigate('/register');
+  };
+
+  const handleSubmit = () => {
+    navigate('/');
+  };
   return (
     <div className="bg-[#E5E5E5] min-w-[1920px] min-h-[100vh] m-[0] text-black">
       <div>
@@ -82,11 +89,17 @@ const Login = () => {
       >
         Forgot your password?
       </button>
-      <div className="mt-[40px] ml-[650px]">
-        <Button variant="outlined" color="success">
-          {' '}
-          Submit{' '}
-        </Button>
+      <div className="mt-[40px] ml-[600px]">
+        <div className="flex gap-[20px]">
+          <Button variant="outlined" color="success" onClick={handleSubmit}>
+            {' '}
+            Submit{' '}
+          </Button>
+          <Button variant="outlined" color="success" onClick={handleRegister}>
+            {' '}
+            Register{' '}
+          </Button>
+        </div>
       </div>
     </div>
   );
