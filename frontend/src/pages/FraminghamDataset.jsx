@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../index.css';
 import axios from 'axios';
-import Reveal from '../components/Reveal';
+import Reveal from '../Components/Reveal';
 import { toast } from 'react-hot-toast';
 const FraminghamDataset = () => {
   const [Data, setData] = useState({
@@ -47,8 +47,8 @@ const FraminghamDataset = () => {
   return (
     <Reveal>
       <div className="mt-[40px] ml-[20px]">
-        <div className="grid-cols-2 grid gap-[20px]">
-          <div className=" flex gap-[20px]">
+        <div className="grid-cols-2 grid gap-[40px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">Are you a male(Yes/No):</span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
@@ -61,9 +61,9 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">Age:</span>
-            <div className="border-2 border-[#7EFF66] rounded">
+            <div className="max-w-10 border-2 border-[#7EFF66] rounded">
               <input
                 type="number"
                 className="box-text"
@@ -74,7 +74,7 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">
               Are you a current Smoker(Yes/No):
             </span>
@@ -89,7 +89,7 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">
               How many cigarretes would you consumer per day:
             </span>
@@ -104,7 +104,7 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">Do you take any BP Meds(Yes/No):</span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
@@ -117,7 +117,7 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">
               Have you had stroke before(Yes/No):
             </span>
@@ -132,7 +132,7 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">
               Have you previously been hypertensive(Yes/No):
             </span>
@@ -147,7 +147,7 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">Do you have diabetes(Yes/No):</span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
@@ -160,8 +160,10 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
-            <span className="input-text">Total Cholestrol level:</span>
+          <div className=" flex gap-[5px]">
+            <span className="input-text">
+              Total Cholestrol level: (Typically ranges between 180 to 250)
+            </span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
                 type="number"
@@ -173,8 +175,10 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
-            <span className="input-text">Systolic Blood Pressure:</span>
+          <div className=" flex gap-[5px]">
+            <span className="input-text">
+              Systolic Blood Pressure:(Typically ranges between 100 to 200)
+            </span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
                 type="number"
@@ -186,8 +190,10 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
-            <span className="input-text">Diastolic Blood Pressure:</span>
+          <div className=" flex gap-[5px]">
+            <span className="input-text">
+              Diastolic Blood Pressure:(Typically ranges between 60 to 140)
+            </span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
                 type="number"
@@ -199,7 +205,7 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">Body Mass Index(BMI):</span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
@@ -212,7 +218,7 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
+          <div className=" flex gap-[5px]">
             <span className="input-text">Heart Rate:</span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
@@ -225,8 +231,10 @@ const FraminghamDataset = () => {
               />
             </div>
           </div>
-          <div className=" flex gap-[20px]">
-            <span className="input-text">Glucose:</span>
+          <div className=" flex gap-[5px]">
+            <span className="input-text">
+              Glucose:(Typically ranges between 80 to 200)
+            </span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
                 type="number"
