@@ -62,7 +62,7 @@ const FraminghamDataset = () => {
             </div>
           </div>
           <div className=" flex gap-[5px]">
-            <span className="input-text">Age:</span>
+            <span className="input-text">Age :</span>
             <div className="max-w-10 border-2 border-[#7EFF66] rounded">
               <input
                 type="number"
