@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../index.css';
-import Reveal from '../components/Reveal';
+import Reveal from '../Components/Reveal';
 const KEELDataset = () => {
   const [KData, setKData] = useState({
     age: '',
@@ -190,7 +190,7 @@ const KEELDataset = () => {
           </div>
         </div>
         <div>
-          <button className="font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]">
+          <button className="hover:scale-110 duration-300 font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]">
             Predict
           </button>
         </div>

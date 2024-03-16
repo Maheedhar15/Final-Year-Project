@@ -46,7 +46,7 @@ const ClevelandDataset = () => {
   return (
     <div className="mt-[40px] ml-[20px] w-[1920px]">
       <div className="grid-cols-2 grid gap-[40px]">
-        <div className=" flex gap-[20px]">
+        <div className=" flex gap-[20px] max-w-[700px]">
           <span className="input-text">Are you a male:</span>
           <div className="border-2 border-[#7EFF66] rounded">
             <input
@@ -59,7 +59,7 @@ const ClevelandDataset = () => {
             />
           </div>
         </div>
-        <div className=" flex gap-[20px]">
+        <div className=" flex gap-[20px] max-w-[700px] ml-[-260px]">
           <span className="input-text">Age:</span>
           <div className="border-2 border-[#7EFF66] rounded">
             <input
@@ -87,7 +87,7 @@ const ClevelandDataset = () => {
             />
           </div>
         </div>
-        <div className=" flex gap-[20px]">
+        <div className=" flex gap-[20px] max-w-[700px] ml-[-260px]">
           <span className="input-text">Resting Blood Pressure:</span>
           <div className="border-2 border-[#7EFF66] rounded">
             <input
@@ -113,7 +113,7 @@ const ClevelandDataset = () => {
             />
           </div>
         </div>
-        <div className=" flex gap-[20px]">
+        <div className=" flex gap-[20px] max-w-[700px] ml-[-260px]">
           <span className="input-text">
             Fasting blood sugar level above 120 mg/dl?:
           </span>
@@ -143,7 +143,7 @@ const ClevelandDataset = () => {
             />
           </div>
         </div>
-        <div className=" flex gap-[20px]">
+        <div className=" flex gap-[20px] max-w-[700px] ml-[-260px]">
           <span className="input-text">Maximum heart rate achieved:</span>
           <div className="border-2 border-[#7EFF66] rounded">
             <input
@@ -169,7 +169,7 @@ const ClevelandDataset = () => {
             />
           </div>
         </div>
-        <div className=" flex gap-[20px]">
+        <div className=" flex gap-[20px] max-w-[700px] ml-[-260px]">
           <span className="input-text">
             ST depression induced by exercise relative to rest
           </span>
@@ -199,7 +199,7 @@ const ClevelandDataset = () => {
             />
           </div>
         </div>
-        <div className=" flex gap-[20px]">
+        <div className=" flex gap-[20px] max-w-[700px] ml-[-260px]">
           <span className="input-text">
             Number of major vessels (0-3) colored by flourosopynumber of major
             vessels (0-3) colored by flourosopy:
@@ -234,7 +234,7 @@ const ClevelandDataset = () => {
       </div>
       <div>
         <button
-          className="font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]"
+          className="hover:scale-110 duration-300 font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]"
           onClick={() => handlePredict()}
         >
           Predict

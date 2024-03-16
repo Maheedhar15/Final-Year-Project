@@ -143,7 +143,9 @@ def pred_clev():
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
         return jsonify({'value': str(result[0]),'prediction': ans})
         
-
+@app.route('/')
+def dashboard():
+    return "hello boiss"
 
 if  __name__ == "__main__":
     app.run(debug=True)

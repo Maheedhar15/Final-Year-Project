@@ -249,7 +249,7 @@ const FraminghamDataset = () => {
         </div>
         <div>
           <button
-            className="font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]"
+            className="hover:scale-110 duration-300 font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]"
             onClick={() => handlePredict()}
           >
             Predict

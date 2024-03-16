@@ -57,7 +57,7 @@ function Dashboard() {
           </span>
 
           <div className="ml-[1080px] flex flex-col duration-300 ease-in">
-            <button onClick={handleUserToggle}>
+            <button onClick={handleUserToggle} className='hover:scale-110 duration-300'>
               <AiOutlineUser className="fill-[#fff] px-[3px] py-[5px] mt-[20px] w-[40px] h-[40px] border-[1px] border-[#7EFF66] rounded-[20px]" />
             </button>
             {userOptions && <Options />}
@@ -74,7 +74,7 @@ function Dashboard() {
             SelectedModel={SelectedModel}
             setSelectedModel={setSelectedModel}
           />
-          <button onClick={() => handleInfo()}>
+          <button className='hover:scale-110 duration-300' onClick={() => handleInfo()}>
             <BiInfoCircle className="w-[30px] h-[30px] fill-[#7EFF66] text-[#fff] mt-[18px]" />
           </button>
         </div>
