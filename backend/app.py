@@ -229,9 +229,6 @@ def pred_clev():
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
         return jsonify({'value': str(result[0]),'prediction': ans})
         
-@app.route("/",methods =["GET"])
-def mainnn():
-    return "Megamo AVAR"
 
 
 if  __name__ == "__main__":
