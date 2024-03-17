@@ -7,10 +7,11 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-
+import bcrypt
 from flask import request
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+from flask_sqlalchemy import SQLAlchemy
 
 # Setup the Flask-JWT-Extended extension
 
@@ -27,34 +28,118 @@ guru_model = pickle.load(open('./guru.sav','rb'))
 app = Flask(__name__)
 CORS(app, origins='*')
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
 jwt = JWTManager(app)
+
+# database creation for user details
+db = SQLAlchemy(app)
+
+class User_predictions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    preds = db.Column(db.String(500), nullable=False)
+    # db.datetime
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(100), nullable=False)
+    lastname = db.Column(db.String(100), nullable=False)
+    email_id = db.Column(db.String(100), unique=True, nullable=False)
+    password_hash = db.Column(db.String(300), nullable=False)
+
+    def __init__(self, firstname, lastname, email_id, password_hash):
+        self.firstname = firstname
+        self.lastname = lastname
+        self.email_id = email_id
+        self.password_hash = password_hash
+
+with app.app_context():
+    db.create_all()
+
+def create_user(firstname, lastname, email_id, password_hash):
+    new_user = User(firstname=firstname, lastname=lastname, email_id=email_id, password_hash=password_hash)
+    db.session.add(new_user)
+    db.session.commit()
 
 def ConvertToBinary(val):
     if(val.lower() == 'yes'):
         return 1.0
     return 0.0
-"""
-@app.route("/login", methods=["POST"])
-def login():
-    if request.method == 'POST':
-        data = request.json
-        username = data["username"]
-        password = data["password"]
-        if username != "test" or password != "test":
-            return jsonify({"msg": "Bad username or password"}), 401
 
-        access_token = create_access_token(identity=username)
-        return jsonify(access_token=access_token)
-"""
-"""
-@app.route("/protected", methods=["GET"])
+@app.route('/login', methods=['POST'])
+def login_page():
+    if request.method == 'POST':    
+        # Create a route to authenticate your users and return JWTs. The create_access_token() function is used to actually generate the JWT.
+
+        useremail = request.json.get("email", None)
+        password = request.json.get("password", None)
+        if useremail == "test" or password == "test":
+            return jsonify({"msg": "Bad email or password"}), 401
+        
+        user = User.query.filter_by(email_id=useremail).first()
+
+        if user and user.password_hash:
+            userBytes = password.encode('utf-8')
+            hash = user.password_hash
+
+            # Check if the user-supplied password matches the hashed password
+            result = bcrypt.checkpw(userBytes, hash) 
+
+        if result:
+            access_token = create_access_token(identity=useremail)
+            return jsonify(access_token=access_token)
+        else:
+            login_page()
+
+# Protect a route with jwt_required, which will kick out requests without a valid JWT present.
+@app.route("/protected", methods=['GET','POST'])
 @jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
-"""
+
+@app.route('/register', methods=['POST'])
+def new_reg():
+    firstname = request.json.get("fname", None)
+    lastname = request.json.get("lname", None)
+    email_id = request.json.get("email", None)
+    password = request.json.get("password", None)
+    conf_password = request.json.get("conf_password", None)
+
+    if firstname == "test" or lastname == "test" or email_id== "test" or password== "test" or conf_password== "test":
+        return jsonify({"msg": "Bad email or password"}), 401
+
+    if password != conf_password:
+        return jsonify({"msg": "Passwords do not match"}), 400
+        # new_reg()
+
+    bytes = password.encode('utf-8') 
+    # generating the salt 
+    salt = bcrypt.gensalt() 
+    # Hashing the password 
+    hashed = bcrypt.hashpw(bytes, salt)     
+
+    create_user(firstname, lastname, email_id, hashed)
+    # login_page()
+    return jsonify({"msg": "User created successfully"}), 201
+
+
+# @app.route('/forgotpassword', methods=['GET', 'POST'])
+# def forgot__password():
+#     if request.method == 'POST':
+#         data = request.json
+#         user_data = client.query.filter_by(mail = data['mail']).first()
+#         if(user_data):
+#             pw_hash = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
+#             user_data.password = pw_hash
+#             print(data['password'], pw_hash)
+#             db.session.add(user_data)
+#             db.session.commit()
+#             return jsonify({'message':'password successfully changed'})
+#         else:
+#             return jsonify({'message':'email not found',}),404
+
+
 @app.route('/predict_framingham', methods=['POST'])
 def pred_fram():
     if request.method == 'POST':
@@ -143,6 +228,9 @@ def pred_clev():
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
         return jsonify({'value': str(result[0]),'prediction': ans})
         
+@app.route("/",methods =["GET"])
+def mainnn():
+    return "Megamo AVAR"
 
 
 if  __name__ == "__main__":
