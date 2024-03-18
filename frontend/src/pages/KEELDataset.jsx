@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../index.css';
 import Reveal from '../Components/Reveal';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 const KEELDataset = () => {
   const [KData, setKData] = useState({
     age: '',
@@ -44,7 +46,7 @@ const KEELDataset = () => {
       <div className="mt-[40px] ml-[20px]">
         <div className="grid-cols-2 grid gap-[40px]">
           <div className=" flex gap-[20px]">
-            <span className="input-text">Gender:</span>
+            <span className="input-text">Are you a male?:</span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
                 type="text"
@@ -110,7 +112,7 @@ const KEELDataset = () => {
           </div>
           <div className=" flex gap-[20px]">
             <span className="input-text">
-              Enter your glucose levels in the range of 1 to 3:
+              Enter your cholestrol levels in the range of 1 to 3:
             </span>
             <div className="border-2 border-[#7EFF66] rounded">
               <input
@@ -190,7 +192,7 @@ const KEELDataset = () => {
           </div>
         </div>
         <div>
-          <button className="hover:scale-110 duration-300 font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]">
+          <button className="hover:scale-110 duration-300 font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]" onClick={() => handlePredict()}>
             Predict
           </button>
         </div>

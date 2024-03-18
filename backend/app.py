@@ -25,6 +25,9 @@ loaded_best_model = pickle.load(open(filename, 'rb'))
 guru_scaler = pickle.load(open('./stdScalerguru.sav', 'rb'))
 guru_model = pickle.load(open('./guru.sav','rb'))
 
+ash_scaler = pickle.load(open('./stdScalerAsh.sav','rb'))
+ash_model = pickle.load(open('./best_model_ash.sav','rb'))
+
 app = Flask(__name__)
 CORS(app, origins='*')
 
@@ -171,30 +174,26 @@ def pred_fram():
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
         return jsonify({'prediction': ans})
 
-@app.route('/predict_davidlapp', methods=['POST'])
+@app.route('/predict_keel', methods=['POST'])
 def home():
     if request.method == 'POST':
         data = request.json
-        gender=ConvertToBinary(data['sex'])
+        gender=ConvertToBinary(data['gender'])
         age=float(data['age'])
-        currentSmoker=ConvertToBinary(data['currentSmoker'])
-        cigsPerDay=float(data['cigsPerDay'])
-        BPmeds=ConvertToBinary(data['BPmeds'])
-        prevalentStroke=ConvertToBinary(data['prevalentStroke'])
-        prevalentHyp=ConvertToBinary(data['prevalentHyp'])
-        diabetes=ConvertToBinary(data['diabetes'])
-        totChol=float(data['totChol'])
-        sysBP=float(data['sysBP'])
-        diaBP=float(data['diaBP'])
-        bmi=float(data['bmi'])
-        heartRate=float(data['heartRate'])
-        glucose=float(data['glucose'])
-        testData = {'male':gender,'age':age,'currentSmoker':currentSmoker,'cigsPerDay': cigsPerDay, 'BPMeds': BPmeds, 'prevalentStroke': prevalentStroke
-                    , 'prevalentHyp': prevalentHyp, 'diabetes': diabetes, 'totChol': totChol, 'sysBP': sysBP, 'diaBP': diaBP, 'BMI': bmi, 'heartRate': heartRate,
-                    'glucose': glucose}
+        height = float(data['height'])
+        weight = float(data['weight'])
+        cholestrol = float(data['cholestrol'])
+        ap_hi = float(data['ap_hi'])
+        ap_lo = float(data['ap_lo'])
+        smoke = ConvertToBinary(data['smoke'])
+        alco = ConvertToBinary(data['alco'])
+        active = ConvertToBinary(data['active'])
+        gluc = float(data['gluc'])
+        testData = {'age':age,'gender':gender,'height':height,'weight': weight, 'ap_hi': ap_hi, 'ap_lo': ap_lo
+                    , 'cholesterol': cholestrol, 'gluc': gluc, 'smoke': smoke, 'alco': alco, 'active': active}
         test_df = pd.DataFrame(testData, index=['0'])
-        test = loaded_scaler_fram.transform(test_df)
-        result = loaded_best_model.predict(np.array(test))
+        test = ash_scaler.transform(test_df)
+        result = ash_model.predict(np.array(test))
         if(result[0] == 0):
             ans = 'The person is Healthy and is Less prone to Chronic Heart Disease'
         else:
