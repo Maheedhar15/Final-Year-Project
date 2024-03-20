@@ -17,7 +17,7 @@ const Options = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login');
+    navigate('/');
   };
   return (
     <div className="w-[100px] absolute mt-[65px] ml-[-10px] duration-300 ease-in">
@@ -31,21 +31,6 @@ const Options = () => {
 };
 
 function Dashboard() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    window.onbeforeunload = function () {
-      localStorage.clear();
-    };
-    if (localStorage['access_token'] == undefined) {
-      toast.success('Session over', {
-        duration: 4000,
-        position: 'top-center',
-      });
-      navigate('/login');
-    }
-  }, []);
-
   const [SelectedModel, setSelectedModel] = useState('framingham');
   const [LegendToggle, setLegendToggle] = useState(false);
   const [userOptions, setUserOptions] = useState(false);

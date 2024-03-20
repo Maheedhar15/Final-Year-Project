@@ -42,11 +42,10 @@ const Login = () => {
     await axios
       .post('http://127.0.0.1:5000/login', UserData)
       .then((res) => {
-        console.log(res.data.access_token);
         if (res.status == 200) {
           localStorage.setItem('access_token', res.data.access_token);
           alert('login successful!!');
-          navigate('/');
+          navigate('/dashboard');
         } else if (String(res.status) == '400') {
           toast.error(res.data.msg, {
             duration: 4000,
