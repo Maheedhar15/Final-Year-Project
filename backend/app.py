@@ -88,7 +88,7 @@ def login_page():
             access_token = create_access_token(identity=useremail)
             return jsonify({"access token" : access_token})
         else:
-            login_page()
+            return jsonify({"msg":"Password does not match"}),400
 
 # Protect a route with jwt_required, which will kick out requests without a valid JWT present.
 @app.route("/protected", methods=['GET','POST'])

@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import { FaUserCircle, FaKey } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -16,6 +17,8 @@ const Login = () => {
     email: '',
     password: '',
   });
+
+  const AllFieldsAreFilled = UserData.email != '' && UserData.password != '';
 
   const handleDataChange = (event) => {
     const { name, value } = event.target;
@@ -35,8 +38,38 @@ const Login = () => {
     navigate('/register');
   };
 
-  const handleSubmit = () => {
-    navigate('/');
+  const handleSubmit = async () => {
+    await axios
+      .post('http://127.0.0.1:5000/login', UserData)
+      .then((res) => {
+        console.log(res.status);
+        if (res.status == 200) {
+          localStorage.setItem('access_token', res.data.access_token);
+          navigate('/');
+        } else if (String(res.status) == '400') {
+          toast.error(res.data.msg, {
+            duration: 4000,
+            position: 'top-center',
+          });
+        } else if (res.status == 402) {
+          toast.error('User already exists', {
+            duration: 4000,
+            position: 'top-center',
+          });
+        }
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status == 400) {
+          alert(err.response.data.msg);
+        } else if (err.response.status == 402) {
+          toast.error('User already exists', {
+            duration: 4000,
+            position: 'top-center',
+          });
+        }
+      });
   };
   return (
     <div className="bg-[#E5E5E5] min-w-[1920px] min-h-[100vh] m-[0] text-black">
@@ -53,6 +86,10 @@ const Login = () => {
               id="input-with-icon-adornment"
               className="max-w-[1146px]"
               placeholder="Enter your registered Email"
+              value={UserData.email}
+              onChange={(e) => handleDataChange(e)}
+              name="email"
+              required={true}
               startAdornment={
                 <InputAdornment position="start">
                   <FaUserCircle />
@@ -73,6 +110,9 @@ const Login = () => {
               id="outlined-adornment-password"
               className=""
               type={showPassword ? 'text' : 'password'}
+              onChange={(e) => handleDataChange(e)}
+              value={UserData.password}
+              required={true}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -89,7 +129,7 @@ const Login = () => {
                   </IconButton>
                 </InputAdornment>
               }
-              label="Password"
+              name="password"
             />
           </FormControl>
         </div>
@@ -102,7 +142,12 @@ const Login = () => {
       </button>
       <div className="mt-[40px] ml-[600px]">
         <div className="flex gap-[20px]">
-          <Button variant="outlined" color="success" onClick={handleSubmit}>
+          <Button
+            variant="outlined"
+            color="success"
+            onClick={handleSubmit}
+            disabled={!AllFieldsAreFilled}
+          >
             {' '}
             Submit{' '}
           </Button>
