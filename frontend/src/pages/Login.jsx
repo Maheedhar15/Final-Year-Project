@@ -7,9 +7,20 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import IconButton from '@mui/material/IconButton';
 import { FaUserCircle, FaKey } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const [UserData, setUserData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleDataChange = (event) => {
+    const { name, value } = event.target;
+    setUserData({ ...UserData, [name]: value });
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
