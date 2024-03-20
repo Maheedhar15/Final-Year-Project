@@ -25,7 +25,7 @@ const KEELDataset = () => {
 
   const handlePredict = async () => {
     await axios
-      .post('https://maheedhar.pythonanywhere.com/predict_keel', KData)
+      .post('https://127.0.0.1:5000/predict_keel', KData)
       .then((res) => {
         if (res.data.value == '0') {
           toast.success(res.data.prediction, {
@@ -192,7 +192,10 @@ const KEELDataset = () => {
           </div>
         </div>
         <div>
-          <button className="hover:scale-110 duration-300 font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]" onClick={() => handlePredict()}>
+          <button
+            className="hover:scale-110 duration-300 font-poppins py-[10px] px-[10px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[18px] ml-[700px] mt-[60px]"
+            onClick={() => handlePredict()}
+          >
             Predict
           </button>
         </div>

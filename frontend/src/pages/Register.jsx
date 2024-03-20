@@ -42,6 +42,7 @@ const Login = () => {
         console.log(res.status);
         if (res.status == 200) {
           localStorage.setItem('access_token', res.data.access_token);
+          alert('User Successfully registered. Welcome!');
           navigate('/');
         } else if (String(res.status) == '400') {
           toast.error(res.data.msg, {
