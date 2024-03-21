@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import { FaUserCircle, FaKey } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
+import { useState } from 'react';
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -27,6 +28,11 @@ const Login = () => {
   const handleSubmit = () => {
     navigate('/');
   };
+
+  const [UserData, setUserData] = useState({
+    email : '',
+    password : ''
+  })
   return (
     <div className="bg-[#E5E5E5] min-w-[1920px] min-h-[100vh] m-[0] text-black">
       <div>

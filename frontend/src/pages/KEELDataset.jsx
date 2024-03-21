@@ -25,7 +25,7 @@ const KEELDataset = () => {
 
   const handlePredict = async () => {
     await axios
-      .post('https://maheedhar.pythonanywhere.com/predict_keel', KData)
+      .post('http://127.0.0.1:5000/predict_keel', KData)
       .then((res) => {
         if (res.data.value == '0') {
           toast.success(res.data.prediction, {
