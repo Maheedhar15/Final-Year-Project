@@ -229,6 +229,12 @@ def pred_clev():
         else:
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
         return jsonify({'value': str(result[0]),'prediction': ans})
+
+
+@app.route('/', methods=['POST'])
+def test_home():
+    return "Hello bois"
+
         
 
 
