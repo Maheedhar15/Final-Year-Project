@@ -44,23 +44,19 @@ class User_predictions(db.Model):
     # db.datetime
     
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(100), nullable=False)
-    lastname = db.Column(db.String(100), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email_id = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(300), nullable=False)
 
-    def __init__(self, firstname, lastname, email_id, password_hash):
-        self.firstname = firstname
-        self.lastname = lastname
+    def __init__(self, email_id, password_hash):
         self.email_id = email_id
         self.password_hash = password_hash
 
 with app.app_context():
     db.create_all()
 
-def create_user(firstname, lastname, email_id, password_hash):
-    new_user = User(firstname=firstname, lastname=lastname, email_id=email_id, password_hash=password_hash)
+def create_user(email_id, password_hash):
+    new_user = User(email_id=email_id, password_hash=password_hash)
     db.session.add(new_user)
     db.session.commit()
 
@@ -90,9 +86,9 @@ def login_page():
 
         if result:
             access_token = create_access_token(identity=useremail)
-            return jsonify(access_token=access_token)
+            return jsonify({"access_token" : access_token})
         else:
-            login_page()
+            return jsonify({"msg":"Password does not match"}),400
 
 # Protect a route with jwt_required, which will kick out requests without a valid JWT present.
 @app.route("/protected", methods=['GET','POST'])
@@ -104,28 +100,34 @@ def protected():
 
 @app.route('/register', methods=['POST'])
 def new_reg():
-    firstname = request.json.get("fname", None)
-    lastname = request.json.get("lname", None)
-    email_id = request.json.get("email", None)
-    password = request.json.get("password", None)
-    conf_password = request.json.get("conf_password", None)
+    if request.method == 'POST':
+        data = request.json
+        email_id = data['email']
+        password = data['password']
+        conf_password = data['confirmpass']
 
-    if firstname == "test" or lastname == "test" or email_id== "test" or password== "test" or conf_password== "test":
-        return jsonify({"msg": "Bad email or password"}), 401
+        user = User.query.filter_by(email_id=email_id).first()
 
-    if password != conf_password:
-        return jsonify({"msg": "Passwords do not match"}), 400
-        # new_reg()
+        if(user):
+            return jsonify({"msg":"User Already exists"}),400
 
-    bytes = password.encode('utf-8') 
-    # generating the salt 
-    salt = bcrypt.gensalt() 
-    # Hashing the password 
-    hashed = bcrypt.hashpw(bytes, salt)     
+        if email_id== "test" or password== "test" or conf_password== "test":
+            return jsonify({"msg": "Bad email or password"}), 401
 
-    create_user(firstname, lastname, email_id, hashed)
-    # login_page()
-    return jsonify({"msg": "User created successfully"}), 201
+        if password != conf_password:
+            return jsonify({"msg": "Passwords do not match"}), 400
+            # new_reg()
+
+        bytes = password.encode('utf-8') 
+        # generating the salt 
+        salt = bcrypt.gensalt() 
+        # Hashing the password 
+        hashed = bcrypt.hashpw(bytes, salt)  
+
+
+        create_user(email_id, hashed)
+        access_token = create_access_token(identity=email_id)
+        return jsonify({"msg": "User created successfully", "access_token" : access_token}), 200
 
 
 # @app.route('/forgotpassword', methods=['GET', 'POST'])
@@ -227,6 +229,12 @@ def pred_clev():
         else:
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
         return jsonify({'value': str(result[0]),'prediction': ans})
+
+
+@app.route('/', methods=['POST'])
+def test_home():
+    return "Hello bois"
+
         
 
 
