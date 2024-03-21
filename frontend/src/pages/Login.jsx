@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
-import { useState } from 'react';
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
 

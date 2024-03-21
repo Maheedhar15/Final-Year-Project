@@ -26,7 +26,7 @@ const ClevelandDataset = () => {
 
   const handlePredict = async () => {
     await axios
-      .post('https://maheedhar.pythonanywhere.com/predict_cleveland', CData)
+      .post('http://127.0.0.1:5000/predict_cleveland', CData)
       .then((res) => {
         console.log(res);
         if (res.data.value == '0') {
