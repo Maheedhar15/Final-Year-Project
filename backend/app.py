@@ -174,7 +174,7 @@ def pred_fram():
             ans = 'The person is Healthy and is Less prone to Chronic Heart Disease'
         else:
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
-        return jsonify({'prediction': ans})
+        return jsonify({'value': str(result[0]),'prediction': ans})
 
 @app.route('/predict_keel', methods=['POST'])
 def home():
@@ -200,7 +200,7 @@ def home():
             ans = 'The person is Healthy and is Less prone to Chronic Heart Disease'
         else:
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
-        return jsonify({'prediction': ans})
+        return jsonify({'value': str(result[0]),'prediction': ans})
     
 @app.route('/predict_cleveland', methods=['POST'])
 def pred_clev():
