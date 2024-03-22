@@ -31,6 +31,14 @@ const Options = () => {
 };
 
 function Dashboard() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage['access_token'] == undefined) {
+      alert('Access Token not found');
+      navigate('/');
+    }
+  }, []);
+
   const [SelectedModel, setSelectedModel] = useState('framingham');
   const [LegendToggle, setLegendToggle] = useState(false);
   const [userOptions, setUserOptions] = useState(false);
