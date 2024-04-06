@@ -42,6 +42,7 @@ const Login = () => {
         console.log(res.status);
         if (res.status == 200) {
           localStorage.setItem('access_token', res.data.access_token);
+          localStorage.setItem('userID', res.data.user_id);
           alert('User Successfully registered. Welcome!');
           navigate('/dashboard');
         } else if (String(res.status) == '400') {

@@ -44,6 +44,7 @@ const Login = () => {
       .then((res) => {
         if (res.status == 200) {
           localStorage.setItem('access_token', res.data.access_token);
+          localStorage.setItem('userID', res.data.user_id);
           alert('login successful!!');
           navigate('/dashboard');
         } else if (String(res.status) == '400') {
