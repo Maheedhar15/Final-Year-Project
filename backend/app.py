@@ -103,8 +103,8 @@ def new_reg():
     if request.method == 'POST':
         data = request.json
         email_id = data['email']
-        password = data['password']
-        conf_password = data['confirmpass']
+        password = str(data['password'])
+        conf_password = str(data['confirmpass'])
 
         user = User.query.filter_by(email_id=email_id).first()
 
@@ -130,20 +130,25 @@ def new_reg():
         return jsonify({"msg": "User created successfully", "access_token" : access_token}), 200
 
 
-# @app.route('/forgotpassword', methods=['GET', 'POST'])
-# def forgot__password():
-#     if request.method == 'POST':
-#         data = request.json
-#         user_data = client.query.filter_by(mail = data['mail']).first()
-#         if(user_data):
-#             pw_hash = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
-#             user_data.password = pw_hash
-#             print(data['password'], pw_hash)
-#             db.session.add(user_data)
-#             db.session.commit()
-#             return jsonify({'message':'password successfully changed'})
-#         else:
-#             return jsonify({'message':'email not found',}),404
+@app.route('/forgotpassword', methods=['GET', 'POST'])
+def forgot__password():
+    if request.method == 'POST':
+        data = request.json
+        user_data = User.query.filter_by(email_id = data['email']).first()
+        if(user_data):
+            if(data['password']!=data['confirmpass']):
+                return jsonify({'message':'Passwords dont match'}),400
+            else:
+                encoded_pw = str(data['password']).encode('utf-8')
+                salt = bcrypt.gensalt()
+                pw_hash = bcrypt.hashpw(encoded_pw, salt) 
+                user_data.password_hash = pw_hash
+                db.session.add(user_data)
+                db.session.commit()
+                print(bcrypt.checkpw(user_data.password_hash,pw_hash))
+                return jsonify({'message':'Password Successfully Changed'})
+        else:
+            return jsonify({'message':'Email ID not found',}),404
 
 
 @app.route('/predict_framingham', methods=['POST'])
