@@ -1,4 +1,4 @@
-from flask import Flask,jsonify
+from flask import Flask,jsonify,send_file
 import pickle
 import numpy as np
 import sklearn
@@ -6,12 +6,19 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+from reportlab.lib.pagesizes import portrait
 from flask_cors import CORS
 import bcrypt
 from flask import request
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from flask_sqlalchemy import SQLAlchemy
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+from datetime import datetime
 
 # Setup the Flask-JWT-Extended extension
 
@@ -41,7 +48,8 @@ db = SQLAlchemy(app)
 class User_predictions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     preds = db.Column(db.String(500), nullable=False)
-    # db.datetime
+    dataset = db.Column(db.String(500),nullable=False)
+    predicted_time = db.Column(db.DateTime,nullable=False, default = datetime.now())
     
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -86,7 +94,7 @@ def login_page():
 
         if result:
             access_token = create_access_token(identity=useremail)
-            return jsonify({"access_token" : access_token})
+            return jsonify({"access_token" : access_token,'user_id':user.id})
         else:
             return jsonify({"msg":"Password does not match"}),400
 
@@ -125,9 +133,11 @@ def new_reg():
         hashed = bcrypt.hashpw(bytes, salt)  
 
 
-        create_user(email_id, hashed)
+        new_user = User(email_id=email_id, password_hash=hashed)
+        db.session.add(new_user)
+        db.session.commit()
         access_token = create_access_token(identity=email_id)
-        return jsonify({"msg": "User created successfully", "access_token" : access_token}), 200
+        return jsonify({"msg": "User created successfully", "access_token" : access_token,"user_id":new_user.id}), 200
 
 
 @app.route('/forgotpassword', methods=['GET', 'POST'])
@@ -151,8 +161,8 @@ def forgot__password():
             return jsonify({'message':'Email ID not found',}),404
 
 
-@app.route('/predict_framingham', methods=['POST'])
-def pred_fram():
+@app.route('/predict_framingham/<int:uid>', methods=['POST'])
+def pred_fram(uid):
     if request.method == 'POST':
         data = request.json
         male=ConvertToBinary(data['male'])
@@ -175,14 +185,29 @@ def pred_fram():
         test_df = pd.DataFrame(testData, index=['0'])
         test = loaded_scaler_fram.transform(test_df)
         result = loaded_best_model.predict(np.array(test))
+        preds = ''
         if(result[0] == 0):
+            preds = 'Good Health'
             ans = 'The person is Healthy and is Less prone to Chronic Heart Disease'
         else:
+            preds = 'Bad Health'
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
+
+        check_preds_cell = User_predictions.query.filter_by(id=uid).first()
+        if(check_preds_cell):
+            check_preds_cell.preds = preds
+            check_preds_cell.dataset = 'Cleveland Dataset'
+            check_preds_cell.predicted_time = datetime.now()
+            db.session.add(check_preds_cell)
+            db.session.commit()
+        else:
+            preds_cell = User_predictions(id=uid, preds=preds, dataset = 'Framingham Dataset')
+            db.session.add(preds_cell)
+            db.session.commit()
         return jsonify({'value': str(result[0]),'prediction': ans})
 
-@app.route('/predict_keel', methods=['POST'])
-def home():
+@app.route('/predict_keel/<int:uid>', methods=['POST'])
+def home(uid):
     if request.method == 'POST':
         data = request.json
         gender=ConvertToBinary(data['gender'])
@@ -201,14 +226,28 @@ def home():
         test_df = pd.DataFrame(testData, index=['0'])
         test = ash_scaler.transform(test_df)
         result = ash_model.predict(np.array(test))
+        preds = ''
         if(result[0] == 0):
+            preds = 'Good Health'
             ans = 'The person is Healthy and is Less prone to Chronic Heart Disease'
         else:
+            preds = 'Bad Health'
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
+        check_preds_cell = User_predictions.query.filter_by(id=uid).first()
+        if(check_preds_cell):
+            check_preds_cell.preds = preds
+            check_preds_cell.dataset = 'KEEL Dataset'
+            check_preds_cell.predicted_time = datetime.now()
+            db.session.add(check_preds_cell)
+            db.session.commit()
+        else:
+            preds_cell = User_predictions(id=uid, preds=preds, dataset = 'KEEL Dataset')
+            db.session.add(preds_cell)
+            db.session.commit()
         return jsonify({'value': str(result[0]),'prediction': ans})
     
-@app.route('/predict_cleveland', methods=['POST'])
-def pred_clev():
+@app.route('/predict_cleveland/<int:uid>', methods=['POST'])
+def pred_clev(uid):
     if request.method == 'POST':
         data = request.json
         gender=ConvertToBinary(data['sex'])
@@ -229,11 +268,139 @@ def pred_clev():
         test_df = pd.DataFrame(testData, index=['0'])
         test = guru_scaler.transform(test_df)
         result = guru_model.predict(np.array(test))
+        preds = ''
         if(result[0] == 0):
+            preds = 'Good Health'
             ans = 'The person is Healthy and is Less prone to Chronic Heart Disease'
         else:
+            preds = 'Bad Health'
             ans = 'The person is Unhealthy and is more prone to Chronic Heart Disease'
+        check_preds_cell = User_predictions.query.filter_by(id=uid).first()
+        if(check_preds_cell):
+            check_preds_cell.preds = preds
+            check_preds_cell.dataset = 'Cleveland Dataset'
+            check_preds_cell.predicted_time = datetime.now()
+            db.session.add(check_preds_cell)
+            db.session.commit()
+        else:
+            preds_cell = User_predictions(id=uid, preds=preds, dataset = 'Cleveland Dataset')
+            db.session.add(preds_cell)
+            db.session.commit()
         return jsonify({'value': str(result[0]),'prediction': ans})
+    
+def generate_pdf(email,pred_date,preds,dataset):
+
+    name = email  
+    current_date = pred_date.strftime("%B %d, %Y")
+    current_time = pred_date.strftime("%I:%M %p")
+    result = preds
+    dataset = dataset
+
+    doc = SimpleDocTemplate("personalized_report.pdf", pagesize=portrait((550, 550)), leftMargin=50, rightMargin=50, topMargin=50, bottomMargin=50)
+
+    # Define styles
+    title_style = ParagraphStyle(
+        name="Title",
+        fontName="Helvetica-Bold",
+        fontSize=20,
+        textColor=colors.navy,
+        alignment=TA_CENTER
+    )
+
+    normal_style = ParagraphStyle(
+        name="Normal",
+        fontName="Helvetica",
+        fontSize=12,
+        textColor=colors.black,
+        leading=16,  # Increase line spacing
+    )
+
+    blue_style = ParagraphStyle(
+        name="Blue",
+        fontName="Helvetica",
+        fontSize=12,
+        textColor=colors.blue,
+        leading=16  # Increase line spacing
+    )
+
+    red_style = ParagraphStyle(
+        name="Red",
+        fontName="Helvetica",
+        fontSize=12,
+        textColor=colors.red,
+        leading=16  # Increase line spacing
+    )
+
+    # Create a list of elements
+    elements = []
+
+    # Title
+    title = Paragraph("<b>Personalized Cardiovascular Health Report</b>", title_style)
+    elements.append(title)
+    elements.append(Spacer(1, 36))  # Add more spacing
+
+    # Current date and time
+    datetime_table_data = [["Report generated on:", Paragraph(current_date, blue_style)],
+                           ["Report generated at:", Paragraph(current_time, blue_style)]]
+    datetime_table = Table(datetime_table_data, colWidths=[180, 180])
+    datetime_table.setStyle(TableStyle([('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE')]))
+    elements.append(datetime_table)
+    elements.append(Spacer(1, 24))  # Add more spacing
+
+    # Welcome message
+    welcome_message = Paragraph(f"<b>Dear {name},</b>", blue_style)
+    elements.append(welcome_message)
+    elements.append(Spacer(1, 12))  # Add spacing
+
+    # General message
+    general_message = Paragraph("Based on our analysis, we are pleased to inform you that your cardiovascular health is under control. Your test results indicate no significant abnormalities. It is always important to take care of your heart health and consult with a healthcare professional for personalized advice.", normal_style)
+    elements.append(general_message)
+    elements.append(Spacer(1, 36))  # Add more spacing
+
+    # Medical report content
+    report_data = [[Paragraph("<b>Variable</b>", normal_style), Paragraph("<b>Value</b>", normal_style)],
+                   [Paragraph("<b>Dataset</b>", normal_style), Paragraph(f"<b>{dataset}</b>", blue_style)],
+                   [Paragraph("<b>Final Result</b>", normal_style), Paragraph(f"<b>{result}</b>", blue_style)]]
+    report_table = Table(report_data, colWidths=[180, 180], hAlign='CENTER')
+    report_table.setStyle(TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                      ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                                      ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+                                      ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                      ('LINEBELOW', (0, 0), (-1, 0), 1, colors.black),
+                                      ('LEFTPADDING', (0, 0), (-1, -1), 5),
+                                      ('RIGHTPADDING', (0, 0), (-1, -1), 5)]))
+    elements.append(report_table)
+    elements.append(Spacer(1, 34))  # Add more spacing
+
+    # Disclaimer
+    disclaimer = Paragraph("<b>Disclaimer:</b><br/><i>This report is generated by an automated system and should not substitute professional medical advice. Please consult with a qualified healthcare provider for personalized medical recommendations. The creators of this application are not liable for any actions or decisions made based on the information provided.</i>", red_style)
+    elements.append(disclaimer)
+
+    # Build the PDF document
+    doc.build(elements)
+
+    
+    return 'Updated'
+
+@app.route('/generate_pdf/<int:uid>')
+def call_generate(uid):
+    user_preds_data = User_predictions.query.filter_by(id=uid).first()
+    userData = User.query.filter_by(id=uid).first()
+
+    if(user_preds_data):
+
+        response = generate_pdf(userData.email_id,user_preds_data.predicted_time,user_preds_data.preds,user_preds_data.dataset)
+
+        if(response == 'Updated'):
+            return send_file("personalized_report.pdf", as_attachment=True)
+        else:
+            return jsonify({'message':"There was some error in the PDF Generation"}),400
+    
+    else:
+
+        return jsonify({'message':'Please predict using our functions to view your report'}),404
+
 
 
 @app.route('/', methods=['POST'])

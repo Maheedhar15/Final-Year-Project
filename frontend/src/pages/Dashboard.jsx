@@ -9,6 +9,7 @@ import KEELDataset from './KEELDataset';
 import '../index.css';
 import ClevelandDataset from './ClevelandDataset';
 import { toast } from 'react-hot-toast';
+import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +30,9 @@ const Options = () => {
     </div>
   );
 };
+
+const userID = localStorage['userID'];
+const path = 'http://127.0.0.1:5000/generate_pdf/' + userID;
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -65,7 +69,13 @@ function Dashboard() {
             HeartSolutions
           </span>
 
-          <div className="ml-[1080px] flex flex-col duration-300 ease-in">
+          <a
+            href={path}
+            className="hover:scale-110 duration-300 text-center align-middle w-[140px] font-poppins py-[15px] px-[5px] bg-[#7EFF66] border-[1px] border-[#fff] text-[#000] rounded-[10px] font-semibold text-[12px] ml-[900px] mt-[10px]"
+          >
+            Download Report
+          </a>
+          <div className="ml-[40px] flex flex-col duration-300 ease-in">
             <button
               onClick={handleUserToggle}
               className="hover:scale-110 duration-300"

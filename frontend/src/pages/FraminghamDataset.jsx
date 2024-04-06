@@ -20,6 +20,9 @@ const FraminghamDataset = () => {
     heartRate: '',
     glucose: '',
   });
+  const token = localStorage['access_token'];
+  const path =
+    'http://localhost:5000/predict_framingham/' + localStorage['userID'];
 
   const handleDataChange = (event) => {
     const { name, value } = event.target;
@@ -27,21 +30,19 @@ const FraminghamDataset = () => {
   };
 
   const handlePredict = async () => {
-    await axios
-      .post('http://127.0.0.1:5000/predict_framingham', Data)
-      .then((res) => {
-        if (res.data.value == '0') {
-          toast.success(res.data.prediction, {
-            duration: 4000,
-            position: 'top-center',
-          });
-        } else {
-          toast.error(res.data.prediction, {
-            duration: 4000,
-            position: 'top-center',
-          });
-        }
-      });
+    await axios.post(path, Data).then((res) => {
+      if (res.data.value == '0') {
+        toast.success(res.data.prediction, {
+          duration: 4000,
+          position: 'top-center',
+        });
+      } else {
+        toast.error(res.data.prediction, {
+          duration: 4000,
+          position: 'top-center',
+        });
+      }
+    });
   };
 
   return (
