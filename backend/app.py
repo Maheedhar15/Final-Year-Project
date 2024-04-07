@@ -73,6 +73,11 @@ def ConvertToBinary(val):
         return 1.0
     return 0.0
 
+def strip_mail(email_id):
+    ind = email_id.index('@')
+    string = email_id[:ind]
+    return string
+
 @app.route('/login', methods=['POST'])
 def login_page():
     if request.method == 'POST':    
@@ -290,7 +295,7 @@ def pred_clev(uid):
     
 def generate_pdf(email,pred_date,preds,dataset):
 
-    name = email  
+    name = strip_mail(email)  
     current_date = pred_date.strftime("%B %d, %Y")
     current_time = pred_date.strftime("%I:%M %p")
     result = preds
@@ -410,8 +415,10 @@ def call_generate(uid):
 def test_home():
     return "Hello bois"
 
+
         
 
 
 if  __name__ == "__main__":
+    strip_mail('maheedhar2010262@ssn.edu.in')
     app.run(debug=True)
