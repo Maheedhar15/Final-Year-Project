@@ -73,6 +73,11 @@ def ConvertToBinary(val):
         return 1.0
     return 0.0
 
+def strip_mail(email_id):
+    ind = email_id.index('@')
+    string = email_id[:ind]
+    return string
+
 @app.route('/login', methods=['POST'])
 def login_page():
     if request.method == 'POST':    
@@ -290,7 +295,7 @@ def pred_clev(uid):
     
 def generate_pdf(email,pred_date,preds,dataset):
 
-    name = email  
+    name = strip_mail(email)  
     current_date = pred_date.strftime("%B %d, %Y")
     current_time = pred_date.strftime("%I:%M %p")
     result = preds
@@ -354,7 +359,10 @@ def generate_pdf(email,pred_date,preds,dataset):
     elements.append(Spacer(1, 12))  # Add spacing
 
     # General message
-    general_message = Paragraph("Based on our analysis, we are pleased to inform you that your cardiovascular health is under control. Your test results indicate no significant abnormalities. It is always important to take care of your heart health and consult with a healthcare professional for personalized advice.", normal_style)
+    if(result == 'Good Health'):
+        general_message = Paragraph("Based on our analysis, we are pleased to inform you that your cardiovascular health is under control. Your test results indicate no significant abnormalities. It is always important to take care of your heart health and consult with a healthcare professional for personalized advice.", normal_style)
+    else:
+        general_message = Paragraph("Based on our analysis, we are unfortunate to inform you that your cardiovascular health is not under control. Your test results indicate significant abnormalities. It is always important to take care of your heart health and consult with a healthcare professional for personalized advice.", normal_style)
     elements.append(general_message)
     elements.append(Spacer(1, 36))  # Add more spacing
 
@@ -407,8 +415,10 @@ def call_generate(uid):
 def test_home():
     return "Hello bois"
 
+
         
 
 
 if  __name__ == "__main__":
+    strip_mail('maheedhar2010262@ssn.edu.in')
     app.run(debug=True)
