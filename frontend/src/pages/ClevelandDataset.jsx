@@ -24,23 +24,24 @@ const ClevelandDataset = () => {
     setCData({ ...CData, [name]: value });
   };
 
+  const userID = localStorage['userID'];
+  const path = 'http://127.0.0.1:5000/predict_cleveland/' + userID;
+
   const handlePredict = async () => {
-    await axios
-      .post('http://127.0.0.1:5000/predict_cleveland', CData)
-      .then((res) => {
-        console.log(res);
-        if (res.data.value == '0') {
-          toast.success(res.data.prediction, {
-            duration: 4000,
-            position: 'top-center',
-          });
-        } else {
-          toast.error(res.data.prediction, {
-            duration: 4000,
-            position: 'top-center',
-          });
-        }
-      });
+    await axios.post(path, CData).then((res) => {
+      console.log(res);
+      if (res.data.value == '0') {
+        toast.success(res.data.prediction, {
+          duration: 4000,
+          position: 'top-center',
+        });
+      } else {
+        toast.error(res.data.prediction, {
+          duration: 4000,
+          position: 'top-center',
+        });
+      }
+    });
   };
 
   return (
